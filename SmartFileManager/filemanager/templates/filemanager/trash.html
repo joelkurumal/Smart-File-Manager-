@@ -1,0 +1,171 @@
+{% extends 'filemanager/base.html' %}
+
+{% block title %}
+Trash | Smart File Manager
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="dashboard-header">
+
+    <div>
+
+        <h1>
+            Trash
+        </h1>
+
+        <p>
+            Restore files or permanently delete them.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{% url 'dashboard' %}"
+        class="btn btn-outline-primary">
+
+        <i class="bi bi-arrow-left"></i>
+
+        Back to Files
+
+    </a>
+
+</div>
+
+
+<div class="files-section">
+
+
+    {% if files %}
+
+
+        <div class="file-grid">
+
+
+            {% for item in files %}
+
+
+                <div class="file-card trash-card">
+
+
+                    <div class="file-card-icon trash-icon">
+
+                        <i class="bi bi-trash"></i>
+
+                    </div>
+
+
+                    <div class="file-card-content">
+
+                        <h5
+                            title="{{ item.name }}">
+
+                            {{ item.name }}
+
+                        </h5>
+
+
+                        <div class="file-meta">
+
+                            <span>
+                                {{ item.category_label }}
+                            </span>
+
+                            <span>
+                                {{ item.file_size|filesizeformat }}
+                            </span>
+
+                        </div>
+
+
+                        <small>
+
+                            Deleted:
+
+                            {{ item.deleted_at|date:"d M Y, h:i A" }}
+
+                        </small>
+
+                    </div>
+
+
+                    <div class="file-actions">
+
+
+                        <form
+                            method="post"
+                            action="{% url 'restore' item.id %}">
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="action-btn restore-btn"
+                                title="Restore">
+
+                                <i class="bi bi-arrow-counterclockwise"></i>
+
+                            </button>
+
+                        </form>
+
+
+                        <form
+                            method="post"
+                            action="{% url 'permanent_delete' item.id %}">
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="action-btn delete-btn"
+                                title="Delete Permanently"
+                                onclick="return confirm('Permanently delete this file? This cannot be undone.');">
+
+                                <i class="bi bi-trash3"></i>
+
+                            </button>
+
+                        </form>
+
+
+                    </div>
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    {% else %}
+
+
+        <div class="empty-state">
+
+            <i class="bi bi-trash3"></i>
+
+            <h4>
+                Trash is empty
+            </h4>
+
+            <p>
+                Deleted files will appear here.
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+{% endblock %}

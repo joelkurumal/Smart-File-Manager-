@@ -1,0 +1,539 @@
+{% extends "filemanager/base.html" %}
+
+{% block title %}Dashboard - Smart File Manager{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid dashboard-container">
+
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>My Files</h1>
+
+            <p>
+                Upload, organize and manage your files easily.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- UPLOAD AREA -->
+    <!-- ================================================= -->
+
+    <div class="upload-card">
+
+        <form
+            method="POST"
+            action="{% url 'upload' %}"
+            enctype="multipart/form-data"
+            id="uploadForm"
+        >
+
+            {% csrf_token %}
+
+            <div
+                class="drop-zone"
+                id="dropZone"
+            >
+
+                <div class="upload-icon">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                </div>
+
+                <h3>
+                    Drag & Drop Files Here
+                </h3>
+
+                <p>
+                    or select files from your computer
+                </p>
+
+                <label
+                    for="fileInput"
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-folder2-open"></i>
+                    Choose Files
+                </label>
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    name="files"
+                    multiple
+                    hidden
+                >
+
+            </div>
+
+
+            <!-- SELECTED FILES -->
+
+            <div
+                id="selectedFiles"
+                class="selected-files"
+            >
+            </div>
+
+
+            <!-- UPLOAD BUTTON -->
+
+            <div class="upload-button-container">
+
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                    id="uploadButton"
+                >
+                    <i class="bi bi-cloud-upload"></i>
+                    Upload Files
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- STATISTICS -->
+    <!-- ================================================= -->
+
+    <div class="row statistics-row">
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="bi bi-files"></i>
+                </div>
+
+                <div>
+                    <h4>
+                        {{ total_files }}
+                    </h4>
+
+                    <p>
+                        Total Files
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="bi bi-image"></i>
+                </div>
+
+                <div>
+                    <h4>
+                        {{ image_count }}
+                    </h4>
+
+                    <p>
+                        Images
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="bi bi-camera-video"></i>
+                </div>
+
+                <div>
+                    <h4>
+                        {{ video_count }}
+                    </h4>
+
+                    <p>
+                        Videos
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mb-3">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+
+                <div>
+                    <h4>
+                        {{ document_count }}
+                    </h4>
+
+                    <p>
+                        Documents
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- SEARCH / FILTER / SORT -->
+    <!-- ================================================= -->
+
+    <div class="filter-card">
+
+        <form
+            method="GET"
+            action="{% url 'dashboard' %}"
+        >
+
+            <div class="row align-items-end">
+
+
+                <!-- SEARCH -->
+
+                <div class="col-lg-4 col-md-6 mb-3">
+
+                    <label>
+                        Search Files
+                    </label>
+
+                    <div class="search-box">
+
+                        <i class="bi bi-search"></i>
+
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control"
+                            placeholder="Search by file name..."
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <label>
+                        Category
+                    </label>
+
+                    <select
+                        name="category"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            All Categories
+                        </option>
+
+                        <option
+                            value="image"
+                            {% if category == "image" %}
+                                selected
+                            {% endif %}
+                        >
+                            Images
+                        </option>
+
+                        <option
+                            value="video"
+                            {% if category == "video" %}
+                                selected
+                            {% endif %}
+                        >
+                            Videos
+                        </option>
+
+                        <option
+                            value="document"
+                            {% if category == "document" %}
+                                selected
+                            {% endif %}
+                        >
+                            Documents
+                        </option>
+
+                        <option
+                            value="other"
+                            {% if category == "other" %}
+                                selected
+                            {% endif %}
+                        >
+                            Others
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- SORT -->
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <label>
+                        Sort By
+                    </label>
+
+                    <select
+                        name="sort"
+                        class="form-select"
+                    >
+
+                        <option
+                            value="newest"
+                            {% if sort == "newest" %}
+                                selected
+                            {% endif %}
+                        >
+                            Newest First
+                        </option>
+
+                        <option
+                            value="oldest"
+                            {% if sort == "oldest" %}
+                                selected
+                            {% endif %}
+                        >
+                            Oldest First
+                        </option>
+
+                        <option
+                            value="largest"
+                            {% if sort == "largest" %}
+                                selected
+                            {% endif %}
+                        >
+                            Largest First
+                        </option>
+
+                        <option
+                            value="smallest"
+                            {% if sort == "smallest" %}
+                                selected
+                            {% endif %}
+                        >
+                            Smallest First
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- FILTER BUTTON -->
+
+                <div class="col-lg-2 col-md-6 mb-3">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary filter-button"
+                    >
+                        <i class="bi bi-funnel"></i>
+                        Apply
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- FILES -->
+    <!-- ================================================= -->
+
+    <div class="files-section">
+
+        <div class="section-title">
+
+            <div>
+
+                <h2>
+                    Your Files
+                </h2>
+
+                <span>
+                    {{ files|length }} file(s)
+                </span>
+
+            </div>
+
+        </div>
+
+
+        {% if files %}
+
+        <div class="file-grid">
+
+            {% for item in files %}
+
+            <div class="file-card">
+
+
+                <!-- FILE ICON -->
+
+                <div class="file-icon">
+
+                    {% if item.category == "image" %}
+
+                        <i class="bi bi-image"></i>
+
+                    {% elif item.category == "video" %}
+
+                        <i class="bi bi-camera-video"></i>
+
+                    {% elif item.category == "document" %}
+
+                        <i class="bi bi-file-earmark-text"></i>
+
+                    {% else %}
+
+                        <i class="bi bi-file-earmark"></i>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- FILE INFORMATION -->
+
+                <div class="file-info">
+
+                    <h5
+                        title="{{ item.name }}"
+                    >
+                        {{ item.name }}
+                    </h5>
+
+                    <p>
+                        {{ item.category_label }}
+                    </p>
+
+                    <small>
+                        Size:
+                        {{ item.file_size|filesizeformat }}
+                    </small>
+
+                    <small>
+                        Uploaded:
+                        {{ item.uploaded_at|date:"d M Y, h:i A" }}
+                    </small>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="file-actions">
+
+                    <a
+                        href="{% url 'file_detail' item.id %}"
+                        class="btn btn-sm btn-outline-primary"
+                        title="View"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </a>
+
+
+                    <a
+                        href="{% url 'download' item.id %}"
+                        class="btn btn-sm btn-outline-success"
+                        title="Download"
+                    >
+                        <i class="bi bi-download"></i>
+                    </a>
+
+
+                    <form
+                        method="POST"
+                        action="{% url 'move_to_trash' item.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-sm btn-outline-danger"
+                            title="Move to Trash"
+                            onclick="return confirm('Move this file to trash?')"
+                        >
+                            <i class="bi bi-trash"></i>
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+
+                <i class="bi bi-folder-x"></i>
+
+            </div>
+
+            <h3>
+                No Files Found
+            </h3>
+
+            <p>
+                Upload some files to get started.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

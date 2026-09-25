@@ -1,0 +1,133 @@
+{% extends 'filemanager/base.html' %}
+
+{% block title %}
+Create Account | Smart File Manager
+{% endblock %}
+
+
+{% block content %}
+
+<div class="auth-wrapper">
+
+    <div class="auth-card">
+
+        <div class="auth-icon">
+
+            <i class="bi bi-person-plus-fill"></i>
+
+        </div>
+
+
+        <h2>
+            Create Account
+        </h2>
+
+
+        <p class="auth-subtitle">
+
+            Start managing your files
+
+        </p>
+
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            {% if form.non_field_errors %}
+
+                <div class="alert alert-danger">
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="form-group">
+
+                <label>
+                    Username
+                </label>
+
+                {{ form.username }}
+
+                {% for error in form.username.errors %}
+
+                    <small class="text-danger">
+                        {{ error }}
+                    </small>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+                {{ form.password1 }}
+
+                {% for error in form.password1.errors %}
+
+                    <small class="text-danger">
+                        {{ error }}
+                    </small>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Confirm Password
+                </label>
+
+                {{ form.password2 }}
+
+                {% for error in form.password2.errors %}
+
+                    <small class="text-danger">
+                        {{ error }}
+                    </small>
+
+                {% endfor %}
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary auth-button">
+
+                <i class="bi bi-person-check"></i>
+
+                Create Account
+
+            </button>
+
+        </form>
+
+
+        <p class="auth-footer">
+
+            Already have an account?
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

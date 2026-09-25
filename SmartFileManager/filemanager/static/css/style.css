@@ -1,0 +1,307 @@
+/* =========================================================
+   UPLOAD AREA
+   ========================================================= */
+
+.upload-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.drop-zone {
+    border: 2px dashed #b8c2cc;
+    border-radius: 14px;
+    padding: 45px 20px;
+    text-align: center;
+    transition: 0.3s;
+    background: #fafbfc;
+}
+
+.drop-zone:hover,
+.drop-zone.drag-over {
+    border-color: #0d6efd;
+    background: #f0f6ff;
+}
+
+.upload-icon {
+    font-size: 50px;
+    color: #0d6efd;
+    margin-bottom: 10px;
+}
+
+.drop-zone h3 {
+    margin-bottom: 8px;
+}
+
+.drop-zone p {
+    color: #777;
+}
+
+
+/* =========================================================
+   SELECTED FILES
+   ========================================================= */
+
+.selected-files {
+    margin-top: 20px;
+}
+
+.selected-file-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background: #f7f8fa;
+    border-radius: 10px;
+}
+
+.selected-file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.selected-file-info > i {
+    font-size: 25px;
+    color: #0d6efd;
+}
+
+.selected-file-info strong {
+    display: block;
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-file-info small {
+    display: block;
+    color: #777;
+}
+
+.remove-file {
+    border: none;
+    background: transparent;
+    color: #dc3545;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.upload-button-container {
+    margin-top: 20px;
+    text-align: right;
+}
+
+
+/* =========================================================
+   STATISTICS
+   ========================================================= */
+
+.statistics-row {
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: #eef5ff;
+    color: #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.stat-card h4 {
+    margin: 0;
+}
+
+.stat-card p {
+    margin: 0;
+    color: #777;
+}
+
+
+/* =========================================================
+   FILTER
+   ========================================================= */
+
+.filter-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.filter-card label {
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+.search-box input {
+    padding-left: 38px;
+}
+
+.filter-button {
+    width: 100%;
+}
+
+
+/* =========================================================
+   FILE GRID
+   ========================================================= */
+
+.file-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(280px, 1fr)
+        );
+
+    gap: 20px;
+}
+
+.file-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: 0.2s;
+}
+
+.file-card:hover {
+    transform: translateY(-3px);
+}
+
+.file-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    background: #eef5ff;
+    color: #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 27px;
+    margin-bottom: 15px;
+}
+
+.file-info h5 {
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-info p {
+    color: #0d6efd;
+    margin-bottom: 5px;
+}
+
+.file-info small {
+    display: block;
+    color: #777;
+    margin-bottom: 3px;
+}
+
+.file-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.file-actions form {
+    margin: 0;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    text-align: center;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 60px 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.empty-icon {
+    font-size: 55px;
+    color: #aaa;
+    margin-bottom: 15px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .drop-zone {
+        padding: 30px 15px;
+    }
+
+    .upload-button-container {
+        text-align: center;
+    }
+
+    .upload-button-container button {
+        width: 100%;
+    }
+
+    .file-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .selected-file-info strong {
+        max-width: 200px;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .upload-card {
+        padding: 15px;
+    }
+
+    .filter-card {
+        padding: 15px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+}

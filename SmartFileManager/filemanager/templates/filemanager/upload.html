@@ -1,0 +1,404 @@
+{% extends 'filemanager/base.html' %}
+
+{% block title %}
+Upload Files | Smart File Manager
+{% endblock %}
+
+
+{% block content %}
+
+<div class="upload-page">
+
+    <div class="upload-heading">
+
+        <h2>
+            Upload Files
+        </h2>
+
+        <p>
+            Drag and drop your files here or select them
+            from your computer.
+        </p>
+
+    </div>
+
+
+    <!-- DRAG AND DROP AREA -->
+
+    <div
+        class="drop-zone"
+        id="dropZone">
+
+
+        <div class="drop-zone-icon">
+
+            <i class="bi bi-cloud-arrow-up"></i>
+
+        </div>
+
+
+        <h3>
+            Drag & Drop Files Here
+        </h3>
+
+
+        <p class="text-muted">
+            or
+        </p>
+
+
+        <label
+            for="fileInput"
+            class="btn btn-primary upload-select-btn">
+
+            <i class="bi bi-folder2-open"></i>
+
+            Select Files
+
+        </label>
+
+
+        <input
+            type="file"
+            id="fileInput"
+            name="file"
+            multiple
+            hidden>
+
+
+        <p class="upload-help">
+
+            You can select multiple files at once.
+
+        </p>
+
+
+    </div>
+
+
+    <!-- SELECTED FILES -->
+
+    <div
+        id="selectedFiles"
+        class="selected-files mt-4">
+
+    </div>
+
+
+    <!-- UPLOAD FORM -->
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        id="uploadForm">
+
+        {% csrf_token %}
+
+        <div id="hiddenInputs"></div>
+
+
+        <button
+            type="submit"
+            id="uploadButton"
+            class="btn btn-success upload-all-btn"
+            disabled>
+
+            <i class="bi bi-cloud-arrow-up"></i>
+
+            Upload Selected Files
+
+        </button>
+
+    </form>
+
+
+    <div class="upload-features">
+
+
+        <div class="upload-feature">
+
+            <i class="bi bi-shield-check"></i>
+
+            <span>
+                Duplicate Detection
+            </span>
+
+        </div>
+
+
+        <div class="upload-feature">
+
+            <i class="bi bi-folder-check"></i>
+
+            <span>
+                Automatic Categorization
+            </span>
+
+        </div>
+
+
+        <div class="upload-feature">
+
+            <i class="bi bi-database-check"></i>
+
+            <span>
+                Secure Database Storage
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+const dropZone = document.getElementById("dropZone");
+const fileInput = document.getElementById("fileInput");
+const selectedFilesContainer =
+    document.getElementById("selectedFiles");
+
+const uploadButton =
+    document.getElementById("uploadButton");
+
+const uploadForm =
+    document.getElementById("uploadForm");
+
+const hiddenInputs =
+    document.getElementById("hiddenInputs");
+
+
+let selectedFiles = [];
+
+
+/* ==========================================
+   SELECT FILES
+========================================== */
+
+fileInput.addEventListener("change", function () {
+
+    addFiles(this.files);
+
+});
+
+
+/* ==========================================
+   DRAG OVER
+========================================== */
+
+dropZone.addEventListener("dragover", function (event) {
+
+    event.preventDefault();
+
+    dropZone.classList.add("drag-active");
+
+});
+
+
+/* ==========================================
+   DRAG LEAVE
+========================================== */
+
+dropZone.addEventListener("dragleave", function () {
+
+    dropZone.classList.remove("drag-active");
+
+});
+
+
+/* ==========================================
+   DROP
+========================================== */
+
+dropZone.addEventListener("drop", function (event) {
+
+    event.preventDefault();
+
+    dropZone.classList.remove("drag-active");
+
+    addFiles(event.dataTransfer.files);
+
+});
+
+
+/* ==========================================
+   ADD FILES
+========================================== */
+
+function addFiles(files) {
+
+    for (let file of files) {
+
+        selectedFiles.push(file);
+
+    }
+
+    displayFiles();
+
+}
+
+
+/* ==========================================
+   DISPLAY FILES
+========================================== */
+
+function displayFiles() {
+
+    selectedFilesContainer.innerHTML = "";
+
+    hiddenInputs.innerHTML = "";
+
+
+    if (selectedFiles.length === 0) {
+
+        uploadButton.disabled = true;
+
+        return;
+
+    }
+
+
+    uploadButton.disabled = false;
+
+
+    selectedFiles.forEach(
+        function (file, index) {
+
+
+            const fileSize =
+                formatFileSize(file.size);
+
+
+            const item =
+                document.createElement("div");
+
+
+            item.className =
+                "selected-file";
+
+
+            item.innerHTML = `
+
+                <div class="selected-file-icon">
+
+                    <i class="bi bi-file-earmark"></i>
+
+                </div>
+
+                <div class="selected-file-info">
+
+                    <strong>
+                        ${file.name}
+                    </strong>
+
+                    <small>
+                        ${fileSize}
+                    </small>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="remove-file"
+                    onclick="removeFile(${index})">
+
+                    <i class="bi bi-x-lg"></i>
+
+                </button>
+
+            `;
+
+
+            selectedFilesContainer.appendChild(item);
+
+
+            /*
+             * Create hidden file input.
+             */
+
+            const dataTransfer =
+                new DataTransfer();
+
+
+            dataTransfer.items.add(file);
+
+
+            const input =
+                document.createElement("input");
+
+
+            input.type = "file";
+
+            input.name = "files";
+
+            input.hidden = true;
+
+            input.files = dataTransfer.files;
+
+
+            hiddenInputs.appendChild(input);
+
+        }
+    );
+
+}
+
+
+/* ==========================================
+   REMOVE FILE
+========================================== */
+
+function removeFile(index) {
+
+    selectedFiles.splice(index, 1);
+
+    displayFiles();
+
+}
+
+
+/* ==========================================
+   FILE SIZE
+========================================== */
+
+function formatFileSize(bytes) {
+
+    if (bytes === 0) {
+
+        return "0 Bytes";
+
+    }
+
+
+    const sizes = [
+        "Bytes",
+        "KB",
+        "MB",
+        "GB"
+    ];
+
+
+    const i =
+        Math.floor(
+            Math.log(bytes) /
+            Math.log(1024)
+        );
+
+
+    return (
+        parseFloat(
+            (bytes /
+            Math.pow(1024, i))
+            .toFixed(2)
+        )
+        + " "
+        + sizes[i]
+    );
+
+}
+
+</script>
+
+{% endblock %}

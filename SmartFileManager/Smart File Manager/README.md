@@ -1,0 +1,2 @@
+# Smart File Manager  
+Smart File Manager  —  Django, Python, SQLite, HTML, CSS, Bootstrap, JavaScript | GitHub •	Developed a Django-based file management application with user authentication, drag-and-drop uploads, automatic file categorization, and category-based folder organization.  •	Implemented file search, filtering, sorting by upload date and file size, duplicate file detection, preview, download, and trash/restore functionality.  •	Designed a responsive Bootstrap-based interface with SQLite database integration for efficient file storage and management
